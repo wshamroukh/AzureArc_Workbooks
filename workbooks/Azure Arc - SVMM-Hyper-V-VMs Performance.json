@@ -220,7 +220,7 @@
       {
           "type": 1,
           "content": {
-              "json": "## 🔥 **Detailed Machine Performance Utilisation**\n\n**What You're Looking At**: A detailed view of machine performance across your connected estate for the selected analysis period.\n\n**Why This Matters**: Deep diving into a single machine's detailed view.\n\n---\n\n### 📋 **Select the machine**"
+              "json": "## 🔍 **Detailed Machine Performance Utilisation**\n\n**What You're Looking At**: A detailed view of machine performance across your connected estate for the selected analysis period.\n\n**Why This Matters**: Deep diving into a single machine's detailed view.\n\n---\n\n### 📋 **Select the machine**"
           }
       },
       {

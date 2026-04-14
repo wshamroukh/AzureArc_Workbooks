@@ -354,7 +354,7 @@
                   "yAxisMinimum": 0,
                   "yAxisMaximum": 100
               },
-              "title": "� Disk Free Space Trend Over Time",
+              "title": "💽 Disk Free Space Trend Over Time",
               "description": "Historical disk free space percentage - tracks storage consumption and helps prevent disk full situations"
           }
       },

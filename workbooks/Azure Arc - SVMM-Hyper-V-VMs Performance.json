@@ -336,6 +336,34 @@
           "type": 3,
           "content": {
               "version": "KqlItem/1.0",
+              "query": "// Disk IOPS Trend - Historical Data (Robust)\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated {TimeRange}\n| where Namespace == \"LogicalDisk\"\n    and Name in (\"ReadsPerSecond\", \"WritesPerSecond\")\n| summarize \n    ReadsPerSec = avgif(Val, Name == \"ReadsPerSecond\"),\n    WritesPerSec = avgif(Val, Name == \"WritesPerSecond\")\n    by bin(TimeGenerated, 1h)\n| extend \n    ReadsPerSec = coalesce(ReadsPerSec, 0.0),\n    WritesPerSec = coalesce(WritesPerSec, 0.0),\n    TotalIOPS = ReadsPerSec + WritesPerSec\n| extend IOPSStatus = case(\n        TotalIOPS > 1000, \"🔴 High\",\n        TotalIOPS > 500, \"🟠 Moderate\",\n        TotalIOPS > 100, \"🟡 Low\",\n        \"🟢 Normal\"\n    )\n| project TimeGenerated, TotalIOPS, ReadsPerSec, WritesPerSec, IOPSStatus\n| order by TimeGenerated asc",
+              "size": 1,
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                  "{LogAnalyticsWorkspace}"
+              ],
+              "visualization": "linechart",
+              "chartSettings": {
+                  "xAxis": "TimeGenerated",
+                  "yAxis": [
+                        "TotalIOPS",
+                        "ReadsPerSec",
+                        "WritesPerSec"
+                  ],
+                  "showLegend": true,
+                  "showDataPoints": false,
+                  "yAxisMinimum": 0,
+                  "yAxisMaximum": 100
+              },
+              "title": "💽 Disk IOPs Trend Over Time",
+              "description": "Historical disk IOPS - tracks storage performance and helps identify potential bottlenecks"
+          }
+      },
+      {
+          "type": 3,
+          "content": {
+              "version": "KqlItem/1.0",
               "query": "// Disk Free Space Trend - Historical Data\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated {TimeRange}\n| where Namespace == \"LogicalDisk\" and Name == \"FreeSpacePercentage\"\n| summarize DiskFreeSpace = avg(Val) by bin(TimeGenerated, 1h)\n| extend \n    DiskStatus = case(\n        DiskFreeSpace < 10, \"Critical\",\n        DiskFreeSpace < 20, \"Low\",\n        DiskFreeSpace < 40, \"Moderate\",\n        \"Healthy\"\n    )\n| project TimeGenerated, DiskFreeSpace, DiskStatus\n| order by TimeGenerated asc",
               "size": 1,
               "queryType": 0,

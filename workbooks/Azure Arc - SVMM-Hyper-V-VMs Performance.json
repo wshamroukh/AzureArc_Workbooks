@@ -1,633 +1,682 @@
 {
   "version": "Notebook/1.0",
   "items": [
-      {
-        "type": 1,
-        "content": {
-            "json": "# 🤖 Azure Arc Machine Intelligence Centre\n\n## **Your Complete Single-Machine Dashboard**\n\n**🎯 What This Does**: Get a complete 360-degree view of any Azure Arc machine in your organisation with just one click.\n\n**✨ What You'll See:**\n- **🔍 Live Performance Data** - CPU, memory, disk, and network activity\n- **🚀 Why This Matters**: This dashboard shows how Azure Arc transforms any machine into a fully managed, monitored, and secured part of your cloud environment with real-time vulnerability intelligence.\n\n---\n\n### 📋 **Select Analysis Period**"
-        },
-        "name": "title"
+    {
+      "type": 1,
+      "content": {
+        "json": "# 🤖 Azure Arc Machine Intelligence Centre\n\n## **Your Complete Single-Machine Dashboard**\n\n**🎯 What This Does**: Get a complete 360-degree view of any Azure Arc machine in your organisation with just one click.\n\n**✨ What You'll See:**\n- **🔍 Live Performance Data** - CPU, memory, disk, and network activity\n- **🚀 Why This Matters**: This dashboard shows how Azure Arc transforms any machine into a fully managed, monitored, and secured part of your cloud environment with real-time vulnerability intelligence.\n\n---\n\n### 📋 **Select Analysis Period**"
       },
-      {
-        "type": 9,
-        "content": {
+      "name": "title"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "time-range",
             "version": "KqlParameterItem/1.0",
-            "parameters": [
+            "name": "TimeRange",
+            "type": 4,
+            "label": "📅 Analysis Period",
+            "value": {
+              "durationMs": 3600000
+            },
+            "typeSettings": {
+              "selectableValues": [
                 {
-                  "id": "time-range",
-                  "version": "KqlParameterItem/1.0",
-                  "name": "TimeRange",
-                  "type": 4,
-                  "label": "📅 Analysis Period",
-                  "value": {
-                      "durationMs": 3600000
-                  },
-                  "typeSettings": {
-                      "selectableValues": [
-                          {
-                              "durationMs": 3600000
-                          },
-                          {
-                              "durationMs": 14400000
-                          },
-                          {
-                              "durationMs": 43200000
-                          },
-                          {
-                              "durationMs": 86400000
-                          },
-                          {
-                              "durationMs": 259200000
-                          },
-                          {
-                              "durationMs": 604800000
-                          },
-                          {
-                              "durationMs": 1209600000
-                          },
-                          {
-                              "durationMs": 2592000000
-                          }
-                      ],
-                      "allowCustom": true
-                  }
+                  "durationMs": 3600000
                 },
                 {
-                  "id": "workspace-selector",
-                  "version": "KqlParameterItem/1.0",
-                  "name": "LogAnalyticsWorkspace",
-                  "type": 5,
-                  "label": "📊 Log Analytics Workspace",
-                  "isRequired": false,
-                  "query": "where type =~ 'microsoft.operationalinsights/workspaces'",
-                  "crossComponentResources": [
-                      "value::all"
-                  ],
-                  "typeSettings": {
-                      "resourceTypeFilter": {
-                          "microsoft.operationalinsights/workspaces": true
-                      },
-                      "showDefault": false
-                  },
-                  "queryType": 1,
-                  "resourceType": "microsoft.resourcegraph/resources"
+                  "durationMs": 14400000
+                },
+                {
+                  "durationMs": 43200000
+                },
+                {
+                  "durationMs": 86400000
+                },
+                {
+                  "durationMs": 259200000
+                },
+                {
+                  "durationMs": 604800000
+                },
+                {
+                  "durationMs": 1209600000
+                },
+                {
+                  "durationMs": 2592000000
                 }
-            ]
+              ],
+              "allowCustom": true
+            }
+          },
+          {
+            "id": "workspace-selector",
+            "version": "KqlParameterItem/1.0",
+            "name": "LogAnalyticsWorkspace",
+            "type": 5,
+            "label": "📊 Log Analytics Workspace",
+            "query": "where type =~ 'microsoft.operationalinsights/workspaces'",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "resourceTypeFilter": {
+                "microsoft.operationalinsights/workspaces": true
+              },
+              "showDefault": false
+            },
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "03973960-a66c-4a0b-aae6-28cf5b756106",
+            "version": "KqlParameterItem/1.0",
+            "name": "TopMachineCount",
+            "label": "🔢 Top Machine Count",
+            "type": 2,
+            "description": "Specify the number of Machines that you want to show in the query",
+            "isRequired": true,
+            "typeSettings": {
+              "additionalResourceOptions": [],
+              "showDefault": false
+            },
+            "jsonData": "[\r\n    { \"value\": \"5\", \"label\": \"Top 5\" },\r\n    { \"value\": \"10\", \"label\": \"Top 10\" },\r\n    { \"value\": \"15\", \"label\": \"Top 15\" },\r\n    { \"value\": \"20\", \"label\": \"Top 20\", \"selected\":true },\r\n    { \"value\": \"30\", \"label\": \"Top 30\" }\r\n]"
+          },
+          {
+            "id": "55f1cda6-e99b-4af9-9721-9bd57d68eb16",
+            "version": "KqlParameterItem/1.0",
+            "name": "MemoryUtil",
+            "label": "💾 Memory Utilization Threshold",
+            "type": 2,
+            "description": "Select the average memory utilization threshold",
+            "isRequired": true,
+            "typeSettings": {
+              "additionalResourceOptions": []
+            },
+            "jsonData": "[\r\n    { \"value\": \"60\", \"label\": \"60%\" },\r\n    { \"value\": \"70\", \"label\": \"70%\" },\r\n    { \"value\": \"80\", \"label\": \"80%\", \"selected\":true },\r\n    { \"value\": \"85\", \"label\": \"85%\" },\r\n    { \"value\": \"90\", \"label\": \"90%\" }\r\n]"
+          },
+          {
+            "id": "d7baea76-bf8b-4a9d-a693-2427982c660b",
+            "version": "KqlParameterItem/1.0",
+            "name": "CPUUtil",
+            "label": "🖥️ CPU Utilization Threshold",
+            "type": 2,
+            "description": "Select the average CPU utilization threshold",
+            "isRequired": true,
+            "typeSettings": {
+              "additionalResourceOptions": [],
+              "showDefault": false
+            },
+            "jsonData": "[\r\n    { \"value\": \"60\", \"label\": \"60%\" },\r\n    { \"value\": \"70\", \"label\": \"70%\" },\r\n    { \"value\": \"80\", \"label\": \"80%\", \"selected\":true },\r\n    { \"value\": \"90\", \"label\": \"90%\" }\r\n]"
+          }
+        ],
+        "style": "pills",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "parameters - 1"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## 🔥 **Fleet Hotspots - Top CPU &amp; Memory Utilisation**\n\n**What You're Looking At**: The highest-utilisation machines across your connected estate for the selected analysis period.\n\n**Why This Matters**: Quickly identify the busiest machines before drilling into a single machine's detailed view. These lists highlight systems averaging more than **65%** utilisation so you can prioritise investigation and capacity planning."
+      },
+      "name": "text - 2"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "// Top {TopMachineCount} machines by average memory utilisation (>{MemoryUtil}%) using InsightsMetrics\nInsightsMetrics\n| where TimeGenerated {TimeRange}\n| where Origin == \"vm.azm.ms\"\n| where Namespace == \"Memory\"\n| extend TotalMemoryMB = todouble(todynamic(Tags)[\"vm.azm.ms/memorySizeMB\"])\n| where isnotempty(TotalMemoryMB) and TotalMemoryMB > 0\n| summarize \n    AvgAvailableMB = avg(Val),\n    MinAvailableMB = min(Val),\n    Samples = count(),\n    TotalMemoryMB = any(TotalMemoryMB)\n    by Computer\n| extend \n    AvgMemoryUtilization = round(100.0 * (1 - (AvgAvailableMB / TotalMemoryMB)), 1),\n    PeakMemoryUtilization = round(100.0 * (1 - (MinAvailableMB / TotalMemoryMB)), 1)\n| where AvgMemoryUtilization > {MemoryUtil}\n| top {TopMachineCount} by AvgMemoryUtilization desc\n| serialize Rank = row_number()\n| extend \n    UtilizationBand = case(\n        AvgMemoryUtilization >= 90, \"🔴 Critical\",\n        AvgMemoryUtilization >= 80, \"🟠 High\",\n        \"🟡 Elevated\"\n    )\n| project \n    Rank,\n    MachineName = Computer,\n    UtilizationBand,\n    AvgMemoryUtilization,\n    PeakMemoryUtilization,\n    Samples\n| order by Rank asc",
+        "size": 1,
+        "title": "💾 Top {TopMachineCount} Machines with Memory Utilisation Above {MemoryUtil}%",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalyticsWorkspace}"
+        ],
+        "visualization": "table",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "UtilizationBand",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "colors",
+                "thresholdsGrid": [
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "🔴",
+                    "representation": "redBright"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "🟠",
+                    "representation": "orange"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "🟡",
+                    "representation": "yellow"
+                  }
+                ]
+              }
+            },
+            {
+              "columnMatch": "AvgMemoryUtilization|PeakMemoryUtilization",
+              "formatter": 12,
+              "formatOptions": {
+                "palette": "greenRed"
+              },
+              "numberFormat": {
+                "unit": 1,
+                "options": {
+                  "style": "decimal",
+                  "maximumFractionDigits": 1
+                }
+              }
+            },
+            {
+              "columnMatch": "Rank|Samples",
+              "formatter": 0,
+              "numberFormat": {
+                "unit": 17,
+                "options": {
+                  "style": "decimal"
+                }
+              }
+            }
+          ]
         }
       },
-      {
-          "type": 1,
-          "content": {
-              "json": "## 🔥 **Fleet Hotspots - Top CPU &amp; Memory Utilisation**\n\n**What You're Looking At**: The highest-utilisation machines across your connected estate for the selected analysis period.\n\n**Why This Matters**: Quickly identify the busiest machines before drilling into a single machine's detailed view. These lists highlight systems averaging more than **65%** utilisation so you can prioritise investigation and capacity planning."
-          }
-      },
-      {
-          "type": 3,
-          "content": {
-              "version": "KqlItem/1.0",
-              "query": "// Top 5 machines by average memory utilisation (>65%) using InsightsMetrics\nInsightsMetrics\n| where TimeGenerated {TimeRange}\n| where Origin == \"vm.azm.ms\"\n| where Namespace == \"Memory\"\n| extend TotalMemoryMB = todouble(todynamic(Tags)[\"vm.azm.ms/memorySizeMB\"])\n| where isnotempty(TotalMemoryMB) and TotalMemoryMB > 0\n| summarize \n    AvgAvailableMB = avg(Val),\n    MinAvailableMB = min(Val),\n    Samples = count(),\n    TotalMemoryMB = any(TotalMemoryMB)\n    by Computer\n| extend \n    AvgMemoryUtilization = round(100.0 * (1 - (AvgAvailableMB / TotalMemoryMB)), 1),\n    PeakMemoryUtilization = round(100.0 * (1 - (MinAvailableMB / TotalMemoryMB)), 1)\n| where AvgMemoryUtilization > 65\n| top 5 by AvgMemoryUtilization desc\n| serialize Rank = row_number()\n| extend \n    UtilizationBand = case(\n        AvgMemoryUtilization >= 90, \"🔴 Critical\",\n        AvgMemoryUtilization >= 80, \"🟠 High\",\n        \"🟡 Elevated\"\n    )\n| project \n    Rank,\n    MachineName = Computer,\n    UtilizationBand,\n    AvgMemoryUtilization,\n    PeakMemoryUtilization,\n    Samples\n| order by Rank asc",
-              "size": 1,
-              "queryType": 0,
-              "resourceType": "microsoft.operationalinsights/workspaces",
-              "crossComponentResources": [
-                  "{LogAnalyticsWorkspace}"
-              ],
-              "visualization": "table",
-              "gridSettings": {
-                  "formatters": [
-                      {
-                          "columnMatch": "UtilizationBand",
-                          "formatter": 18,
-                          "formatOptions": {
-                              "thresholdsOptions": "colors",
-                              "thresholdsGrid": [
-                                  {
-                                      "operator": "contains",
-                                      "thresholdValue": "🔴",
-                                      "representation": "redBright"
-                                  },
-                                  {
-                                      "operator": "contains",
-                                      "thresholdValue": "🟠",
-                                      "representation": "orange"
-                                  },
-                                  {
-                                      "operator": "contains",
-                                      "thresholdValue": "🟡",
-                                      "representation": "yellow"
-                                  }
-                              ]
-                          }
-                      },
-                      {
-                          "columnMatch": "AvgMemoryUtilization|PeakMemoryUtilization",
-                          "formatter": 12,
-                          "formatOptions": {
-                              "palette": "greenRed"
-                          },
-                          "numberFormat": {
-                              "unit": 1,
-                              "options": {
-                                  "style": "decimal",
-                                  "maximumFractionDigits": 1
-                              }
-                          }
-                      },
-                      {
-                          "columnMatch": "Rank|Samples",
-                          "formatter": 0,
-                          "numberFormat": {
-                              "unit": 17,
-                              "options": {
-                                  "style": "decimal"
-                              }
-                          }
-                      }
-                  ]
-              },
-              "title": "💾 Top 5 Machines with Memory Utilisation Above 65%",
-              "description": "Machines ranked by highest average memory pressure during the selected analysis period using InsightsMetrics"
-          }
-      },
-      {
-          "type": 3,
-          "content": {
-              "version": "KqlItem/1.0",
-              "query": "// Top 5 machines by average CPU utilisation (>3%) using InsightsMetrics\nInsightsMetrics\n| where TimeGenerated {TimeRange}\n| where Namespace == \"Processor\" and Name == \"UtilizationPercentage\"\n| summarize \n    AvgCPUUtilization = avg(Val),\n    PeakCPUUtilization = max(Val),\n    Samples = count()\n    by Computer\n| where AvgCPUUtilization > 3\n| top 5 by AvgCPUUtilization desc\n| serialize Rank = row_number()\n| extend \n    UtilizationBand = case(\n        AvgCPUUtilization >= 90, \"🔴 Critical\",\n        AvgCPUUtilization >= 80, \"🟠 High\",\n        \"🟡 Elevated\"\n    )\n| project \n    Rank,\n    MachineName = Computer,\n    UtilizationBand,\n    AvgCPUUtilization = round(AvgCPUUtilization, 1),\n    PeakCPUUtilization = round(PeakCPUUtilization, 1),\n    Samples\n| order by Rank asc",
-              "size": 1,
-              "queryType": 0,
-              "resourceType": "microsoft.operationalinsights/workspaces",
-              "crossComponentResources": [
-                  "{LogAnalyticsWorkspace}"
-              ],
-              "visualization": "table",
-              "gridSettings": {
-                  "formatters": [
-                      {
-                          "columnMatch": "UtilizationBand",
-                          "formatter": 18,
-                          "formatOptions": {
-                              "thresholdsOptions": "colors",
-                              "thresholdsGrid": [
-                                  {
-                                      "operator": "contains",
-                                      "thresholdValue": "🔴",
-                                      "representation": "redBright"
-                                  },
-                                  {
-                                      "operator": "contains",
-                                      "thresholdValue": "🟠",
-                                      "representation": "orange"
-                                  },
-                                  {
-                                      "operator": "contains",
-                                      "thresholdValue": "🟡",
-                                      "representation": "yellow"
-                                  }
-                              ]
-                          }
-                      },
-                      {
-                          "columnMatch": "AvgCPUUtilization|PeakCPUUtilization",
-                          "formatter": 12,
-                          "formatOptions": {
-                              "palette": "greenRed"
-                          },
-                          "numberFormat": {
-                              "unit": 1,
-                              "options": {
-                                  "style": "decimal",
-                                  "maximumFractionDigits": 1
-                              }
-                          }
-                      },
-                      {
-                          "columnMatch": "Rank|Samples",
-                          "formatter": 0,
-                          "numberFormat": {
-                              "unit": 17,
-                              "options": {
-                                  "style": "decimal"
-                              }
-                          }
-                      }
-                  ]
-              },
-              "title": "🖥️ Top 5 Machines with CPU Utilisation Above 3%",
-              "description": "Machines ranked by highest average CPU pressure during the selected analysis period using InsightsMetrics"
-          }
-      },
-      {
-          "type": 1,
-          "content": {
-              "json": "## 🔍 **Detailed Machine Performance Utilisation**\n\n**What You're Looking At**: A detailed view of machine performance across your connected estate for the selected analysis period.\n\n**Why This Matters**: Deep diving into a single machine's detailed view.\n\n---\n\n### 📋 **Select the machine**"
-          }
-      },
-      {
-          "type": 9,
-          "content": {
-              "version": "KqlParameterItem/1.0",
-              "parameters": [
+      "name": "query - 3"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "// Top {TopMachineCount} machines by average CPU utilisation (>{CPUUtil}%) using InsightsMetrics\nInsightsMetrics\n| where TimeGenerated {TimeRange}\n| where Namespace == \"Processor\" and Name == \"UtilizationPercentage\"\n| summarize \n    AvgCPUUtilization = avg(Val),\n    PeakCPUUtilization = max(Val),\n    Samples = count()\n    by Computer\n| where AvgCPUUtilization > {CPUUtil}\n| top {TopMachineCount} by AvgCPUUtilization desc\n| serialize Rank = row_number()\n| extend \n    UtilizationBand = case(\n        AvgCPUUtilization >= 80, \"🔴 Critical\",\n        AvgCPUUtilization >= 70, \"🟠 High\",\n        \"🟡 Elevated\"\n    )\n| project \n    Rank,\n    MachineName = Computer,\n    UtilizationBand,\n    AvgCPUUtilization = round(AvgCPUUtilization, 1),\n    PeakCPUUtilization = round(PeakCPUUtilization, 1),\n    Samples\n| order by Rank asc",
+        "size": 1,
+        "title": "🖥️ Top {TopMachineCount} Machines with CPU Utilisation Above {CPUUtil}%",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalyticsWorkspace}"
+        ],
+        "visualization": "table",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "UtilizationBand",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "colors",
+                "thresholdsGrid": [
                   {
-                      "id": "machine-selector",
-                      "version": "KqlParameterItem/1.0",
-                      "name": "SelectedMachine",
-                      "type": 5,
-                      "label": "🖥️ Arc Machine",
-                      "isRequired": true,
-                      "query": "resources\n| where type =~ 'microsoft.hybridcompute/machines'\n| project label = name, value = name, group = resourceGroup, subscription = subscriptionId\n| order by label asc",
-                      "crossComponentResources": [
-                          "value::all"
-                      ],
-                      "typeSettings": {
-                          "showDefault": false,
-                          "additionalResourceOptions": [
-                          ]
-                      },
-                      "queryType": 1,
-                      "resourceType": "microsoft.resourcegraph/resources"
+                    "operator": "contains",
+                    "thresholdValue": "🔴",
+                    "representation": "redBright"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "🟠",
+                    "representation": "orange"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "🟡",
+                    "representation": "yellow"
                   }
-              ]
-          }
+                ]
+              }
+            },
+            {
+              "columnMatch": "AvgCPUUtilization|PeakCPUUtilization",
+              "formatter": 12,
+              "formatOptions": {
+                "palette": "greenRed"
+              },
+              "numberFormat": {
+                "unit": 1,
+                "options": {
+                  "style": "decimal",
+                  "maximumFractionDigits": 1
+                }
+              }
+            },
+            {
+              "columnMatch": "Rank|Samples",
+              "formatter": 0,
+              "numberFormat": {
+                "unit": 17,
+                "options": {
+                  "style": "decimal"
+                }
+              }
+            }
+          ]
+        }
       },
-      {
-          "type": 3,
-          "content": {
-              "version": "KqlItem/1.0",
-              "query": "// Performance Hero KPIs - Current Status\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated > ago(1h)\n| where (Namespace == \"Processor\" and Name == \"UtilizationPercentage\") or\n        (Namespace == \"Memory\" and Name == \"AvailableMB\") or\n        (Namespace == \"LogicalDisk\" and Name == \"FreeSpacePercentage\")\n| summarize \n    LatestValue = avg(Val),\n    SampleCount = count()\n    by Namespace, Name\n| extend \n    MetricName = case(\n        Name == \"UtilizationPercentage\", \"CPU Usage\",\n        Name == \"AvailableMB\", \"Available Memory (MB)\",\n        Name == \"FreeSpacePercentage\", \"Disk Free Space\",\n        Name\n    ),\n    Status = case(\n        Name == \"UtilizationPercentage\" and LatestValue > 80, \"🔴 High\",\n        Name == \"UtilizationPercentage\" and LatestValue > 60, \"🟡 Moderate\", \n        Name == \"UtilizationPercentage\", \"🟢 Normal\",\n        Name == \"AvailableMB\" and LatestValue < 1024, \"🔴 Low\",\n        Name == \"AvailableMB\" and LatestValue < 2048, \"🟡 Moderate\",\n        Name == \"AvailableMB\", \"🟢 Good\",\n        Name == \"FreeSpacePercentage\" and LatestValue < 10, \"🔴 Critical\",\n        Name == \"FreeSpacePercentage\" and LatestValue < 20, \"🟡 Low\",\n        Name == \"FreeSpacePercentage\", \"🟢 Good\",\n        \"⚪ Unknown\"\n    ),\n    FormattedValue = case(\n        Name == \"UtilizationPercentage\", strcat(round(LatestValue, 1), \"%\"),\n        Name == \"AvailableMB\", strcat(round(LatestValue, 0), \" MB\"),\n        Name == \"FreeSpacePercentage\", strcat(round(LatestValue, 1), \"%\"),\n        tostring(round(LatestValue, 2))\n    )\n| project MetricName, Status, FormattedValue, SampleCount",
-              "size": 3,
-              "queryType": 0,
-              "resourceType": "microsoft.operationalinsights/workspaces",
-              "crossComponentResources": [
-                  "{LogAnalyticsWorkspace}"
-              ],
-              "visualization": "tiles",
-              "tileSettings": {
-                  "titleContent": {
-                      "columnMatch": "FormattedValue",
-                      "formatter": 1
+      "name": "query - 4"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## 🔍 **Detailed Machine Performance Utilisation**\n\n**What You're Looking At**: A detailed view of machine performance across your connected estate for the selected analysis period.\n\n**Why This Matters**: Deep diving into a single machine's detailed view.\n\n---\n\n### 📋 **Select the machine**"
+      },
+      "name": "text - 5"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "machine-selector",
+            "version": "KqlParameterItem/1.0",
+            "name": "SelectedMachine",
+            "type": 5,
+            "label": "🖥️ Arc Machine",
+            "isRequired": true,
+            "query": "resources\n| where type =~ 'microsoft.hybridcompute/machines'\n| project label = name, value = name, group = resourceGroup, subscription = subscriptionId\n| order by label asc",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "showDefault": false,
+              "additionalResourceOptions": []
+            },
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          }
+        ],
+        "style": "pills",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "parameters - 6"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "// Performance Hero KPIs - Current Status\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated > ago(1h)\n| where (Namespace == \"Processor\" and Name == \"UtilizationPercentage\") or\n        (Namespace == \"Memory\" and Name == \"AvailableMB\") or\n        (Namespace == \"LogicalDisk\" and Name == \"FreeSpacePercentage\")\n| summarize \n    LatestValue = avg(Val),\n    SampleCount = count()\n    by Namespace, Name\n| extend \n    MetricName = case(\n        Name == \"UtilizationPercentage\", \"CPU Usage\",\n        Name == \"AvailableMB\", \"Available Memory (MB)\",\n        Name == \"FreeSpacePercentage\", \"Disk Free Space\",\n        Name\n    ),\n    Status = case(\n        Name == \"UtilizationPercentage\" and LatestValue > 80, \"🔴 High\",\n        Name == \"UtilizationPercentage\" and LatestValue > 60, \"🟡 Moderate\", \n        Name == \"UtilizationPercentage\", \"🟢 Normal\",\n        Name == \"AvailableMB\" and LatestValue < 1024, \"🔴 Low\",\n        Name == \"AvailableMB\" and LatestValue < 2048, \"🟡 Moderate\",\n        Name == \"AvailableMB\", \"🟢 Good\",\n        Name == \"FreeSpacePercentage\" and LatestValue < 10, \"🔴 Critical\",\n        Name == \"FreeSpacePercentage\" and LatestValue < 20, \"🟡 Low\",\n        Name == \"FreeSpacePercentage\", \"🟢 Good\",\n        \"⚪ Unknown\"\n    ),\n    FormattedValue = case(\n        Name == \"UtilizationPercentage\", strcat(round(LatestValue, 1), \"%\"),\n        Name == \"AvailableMB\", strcat(round(LatestValue, 0), \" MB\"),\n        Name == \"FreeSpacePercentage\", strcat(round(LatestValue, 1), \"%\"),\n        tostring(round(LatestValue, 2))\n    )\n| project MetricName, Status, FormattedValue, SampleCount",
+        "size": 3,
+        "title": "⚡ Real-Time Performance Metrics {TimeRange}",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalyticsWorkspace}"
+        ],
+        "visualization": "tiles",
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "FormattedValue",
+            "formatter": 1
+          },
+          "leftContent": {
+            "columnMatch": "MetricName",
+            "formatter": 1
+          },
+          "secondaryContent": {
+            "columnMatch": "Status",
+            "formatter": 1
+          },
+          "showBorder": true
+        }
+      },
+      "name": "query - 7"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "// CPU Usage Trend - Historical Data\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated {TimeRange}\n| where Namespace == \"Processor\" and Name == \"UtilizationPercentage\"\n| summarize CPUUsage = avg(Val) by bin(TimeGenerated, 1h)\n| extend \n    CPUStatus = case(\n        CPUUsage > 80, \"High\",\n        CPUUsage > 60, \"Moderate\",\n        \"Normal\"\n    )\n| project TimeGenerated, CPUUsage, CPUStatus\n| order by TimeGenerated asc",
+        "size": 1,
+        "title": "🖥️ CPU Usage Trend Over Time",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalyticsWorkspace}"
+        ],
+        "visualization": "linechart",
+        "chartSettings": {
+          "xAxis": "TimeGenerated",
+          "yAxis": [
+            "CPUUsage"
+          ],
+          "showLegend": true,
+          "showDataPoints": false,
+          "yAxisMinimum": 0,
+          "yAxisMaximum": 100
+        }
+      },
+      "name": "query - 8"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "// Memory Usage Trend - Historical Data\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated {TimeRange}\n| where Namespace == \"Memory\" and Name == \"AvailableMB\"\n| summarize MemoryAvailableMB = avg(Val) by bin(TimeGenerated, 1h)\n| extend \n    MemoryAvailableGB = round(MemoryAvailableMB / 1024.0, 2),\n    MemoryStatus = case(\n        MemoryAvailableMB < 1024, \"Critical\",\n        MemoryAvailableMB < 2048, \"Low\",\n        MemoryAvailableMB < 4096, \"Moderate\",\n        \"Healthy\"\n    )\n| project TimeGenerated, MemoryAvailableGB, MemoryStatus\n| order by TimeGenerated asc",
+        "size": 1,
+        "title": "💾 Memory Availability Trend Over Time",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalyticsWorkspace}"
+        ],
+        "visualization": "linechart",
+        "chartSettings": {
+          "xAxis": "TimeGenerated",
+          "yAxis": [
+            "MemoryAvailableGB"
+          ],
+          "showLegend": true,
+          "showDataPoints": false,
+          "yAxisMinimum": 0
+        }
+      },
+      "name": "query - 9"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "// Disk IOPS Trend - Historical Data (Robust)\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated {TimeRange}\n| where Namespace == \"LogicalDisk\"\n    and Name in (\"ReadsPerSecond\", \"WritesPerSecond\")\n| summarize \n    ReadsPerSec = avgif(Val, Name == \"ReadsPerSecond\"),\n    WritesPerSec = avgif(Val, Name == \"WritesPerSecond\")\n    by bin(TimeGenerated, 1h)\n| extend \n    ReadsPerSec = coalesce(ReadsPerSec, 0.0),\n    WritesPerSec = coalesce(WritesPerSec, 0.0),\n    TotalIOPS = ReadsPerSec + WritesPerSec\n| extend IOPSStatus = case(\n        TotalIOPS > 1000, \"🔴 High\",\n        TotalIOPS > 500, \"🟠 Moderate\",\n        TotalIOPS > 100, \"🟡 Low\",\n        \"🟢 Normal\"\n    )\n| project TimeGenerated, TotalIOPS, ReadsPerSec, WritesPerSec, IOPSStatus\n| order by TimeGenerated asc",
+        "size": 1,
+        "title": "💽 Disk IOPs Trend Over Time",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalyticsWorkspace}"
+        ],
+        "visualization": "linechart",
+        "chartSettings": {
+          "xAxis": "TimeGenerated",
+          "yAxis": [
+            "TotalIOPS",
+            "ReadsPerSec",
+            "WritesPerSec"
+          ],
+          "showLegend": true,
+          "showDataPoints": false,
+          "yAxisMinimum": 0,
+          "yAxisMaximum": 100
+        }
+      },
+      "name": "query - 10"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "// Disk Free Space Trend - Historical Data\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated {TimeRange}\n| where Namespace == \"LogicalDisk\" and Name == \"FreeSpacePercentage\"\n| summarize DiskFreeSpace = avg(Val) by bin(TimeGenerated, 1h)\n| extend \n    DiskStatus = case(\n        DiskFreeSpace < 10, \"Critical\",\n        DiskFreeSpace < 20, \"Low\",\n        DiskFreeSpace < 40, \"Moderate\",\n        \"Healthy\"\n    )\n| project TimeGenerated, DiskFreeSpace, DiskStatus\n| order by TimeGenerated asc",
+        "size": 1,
+        "title": "💽 Disk Free Space Trend Over Time",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalyticsWorkspace}"
+        ],
+        "visualization": "linechart",
+        "chartSettings": {
+          "xAxis": "TimeGenerated",
+          "yAxis": [
+            "DiskFreeSpace"
+          ],
+          "showLegend": true,
+          "showDataPoints": false,
+          "yAxisMinimum": 0,
+          "yAxisMaximum": 100
+        }
+      },
+      "name": "query - 11"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "### 📊 **Performance Pattern Analysis**\n\n**What These Tables Show**: The next three tables break down your machine's performance into different ranges (called 'buckets') and show you what percentage of time your machine operates in each range.\n\n**Why This Helps**: Instead of just seeing averages, you can see the full picture - for example, if your CPU averages 50%, these tables tell you whether it's consistently at 50% or bouncing between 20% and 80%. This helps you plan for capacity and spot performance patterns."
+      },
+      "name": "text - 12"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "// Performance Distribution Analysis - CPU Usage Buckets\nlet CPUData = \n    InsightsMetrics\n    | where Computer == '{SelectedMachine}'\n    | where TimeGenerated {TimeRange}\n    | where Namespace == \"Processor\" and Name == \"UtilizationPercentage\"\n    | extend CPUUsage = round(Val, 1)\n    | summarize TotalCPUSamples = count();\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated {TimeRange}\n| where Namespace == \"Processor\" and Name == \"UtilizationPercentage\"\n| extend CPUUsage = round(Val, 1)\n| extend \n    UsageBucket = case(\n        CPUUsage >= 0 and CPUUsage <= 10, \"0-10%\",\n        CPUUsage > 10 and CPUUsage <= 20, \"11-20%\",\n        CPUUsage > 20 and CPUUsage <= 30, \"21-30%\",\n        CPUUsage > 30 and CPUUsage <= 40, \"31-40%\",\n        CPUUsage > 40 and CPUUsage <= 50, \"41-50%\",\n        CPUUsage > 50 and CPUUsage <= 60, \"51-60%\",\n        CPUUsage > 60 and CPUUsage <= 70, \"61-70%\",\n        CPUUsage > 70 and CPUUsage <= 80, \"71-80%\",\n        CPUUsage > 80 and CPUUsage <= 90, \"81-90%\",\n        CPUUsage > 90 and CPUUsage <= 100, \"91-100%\",\n        \"Other\"\n    ),\n    BucketOrder = case(\n        CPUUsage >= 0 and CPUUsage <= 10, 1,\n        CPUUsage > 10 and CPUUsage <= 20, 2,\n        CPUUsage > 20 and CPUUsage <= 30, 3,\n        CPUUsage > 30 and CPUUsage <= 40, 4,\n        CPUUsage > 40 and CPUUsage <= 50, 5,\n        CPUUsage > 50 and CPUUsage <= 60, 6,\n        CPUUsage > 60 and CPUUsage <= 70, 7,\n        CPUUsage > 70 and CPUUsage <= 80, 8,\n        CPUUsage > 80 and CPUUsage <= 90, 9,\n        CPUUsage > 90 and CPUUsage <= 100, 10,\n        11\n    )\n| summarize SampleCount = count() by UsageBucket, BucketOrder\n| extend \n    TotalSamples = toint(toscalar(CPUData | project TotalCPUSamples)),\n    PercentageOfTime = round(100.0 * SampleCount / toint(toscalar(CPUData | project TotalCPUSamples)), 2),\n    PerformanceZone = case(\n        UsageBucket in (\"0-10%\", \"11-20%\", \"21-30%\"), \"🟢 Optimal\",\n        UsageBucket in (\"31-40%\", \"41-50%\", \"51-60%\"), \"🟡 Normal\",\n        UsageBucket in (\"61-70%\", \"71-80%\"), \"🟠 Busy\",\n        UsageBucket in (\"81-90%\", \"91-100%\"), \"🔴 Stressed\",\n        \"⚪ Unknown\"\n    )\n| project \n    CPURange = UsageBucket,\n    PerformanceZone,\n    SampleCount,\n    PercentageOfTime,\n    TotalSamples,\n    BucketOrder\n| order by BucketOrder asc",
+        "size": 1,
+        "title": "📊 CPU Usage Distribution Analysis",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalyticsWorkspace}"
+        ],
+        "visualization": "table",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "PerformanceZone",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "colors",
+                "thresholdsGrid": [
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "🟢",
+                    "representation": "green"
                   },
-                  "leftContent": {
-                      "columnMatch": "MetricName",
-                      "formatter": 1
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "🟡",
+                    "representation": "yellow"
                   },
-                  "secondaryContent": {
-                      "columnMatch": "Status",
-                      "formatter": 1
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "🟠",
+                    "representation": "orange"
                   },
-                  "showBorder": true
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "🔴",
+                    "representation": "redBright"
+                  }
+                ]
+              }
+            },
+            {
+              "columnMatch": "PercentageOfTime",
+              "formatter": 12,
+              "formatOptions": {
+                "palette": "greenRed"
               },
-              "title": "⚡ Real-Time Performance Metrics {TimeRange}",
-              "description": "Current CPU, memory, and disk usage with health status indicators"
-          }
+              "numberFormat": {
+                "unit": 1,
+                "options": {
+                  "style": "decimal",
+                  "maximumFractionDigits": 2
+                }
+              }
+            },
+            {
+              "columnMatch": "SampleCount",
+              "formatter": 0,
+              "numberFormat": {
+                "unit": 17,
+                "options": {
+                  "style": "decimal"
+                }
+              }
+            },
+            {
+              "columnMatch": "BucketOrder",
+              "formatter": 5
+            }
+          ]
+        }
       },
-      {
-          "type": 3,
-          "content": {
-              "version": "KqlItem/1.0",
-              "query": "// CPU Usage Trend - Historical Data\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated {TimeRange}\n| where Namespace == \"Processor\" and Name == \"UtilizationPercentage\"\n| summarize CPUUsage = avg(Val) by bin(TimeGenerated, 1h)\n| extend \n    CPUStatus = case(\n        CPUUsage > 80, \"High\",\n        CPUUsage > 60, \"Moderate\",\n        \"Normal\"\n    )\n| project TimeGenerated, CPUUsage, CPUStatus\n| order by TimeGenerated asc",
-              "size": 1,
-              "queryType": 0,
-              "resourceType": "microsoft.operationalinsights/workspaces",
-              "crossComponentResources": [
-                  "{LogAnalyticsWorkspace}"
-              ],
-              "visualization": "linechart",
-              "chartSettings": {
-                  "xAxis": "TimeGenerated",
-                  "yAxis": [
-                      "CPUUsage"
-                  ],
-                  "showLegend": true,
-                  "showDataPoints": false,
-                  "yAxisMinimum": 0,
-                  "yAxisMaximum": 100
+      "name": "query - 13"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "// Performance Distribution Analysis - Memory Usage Buckets\nlet MemoryData = \n    InsightsMetrics\n    | where Computer == '{SelectedMachine}'\n    | where TimeGenerated {TimeRange}\n    | where Namespace == \"Memory\" and Name == \"AvailableMB\"\n    | extend MemoryAvailableGB = round(Val / 1024.0, 1)\n    | summarize TotalMemorySamples = count();\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated {TimeRange}\n| where Namespace == \"Memory\" and Name == \"AvailableMB\"\n| extend MemoryAvailableGB = round(Val / 1024.0, 1)\n| extend \n    MemoryBucket = case(\n        MemoryAvailableGB >= 0 and MemoryAvailableGB <= 1, \"0-1 GB\",\n        MemoryAvailableGB > 1 and MemoryAvailableGB <= 2, \"1-2 GB\",\n        MemoryAvailableGB > 2 and MemoryAvailableGB <= 4, \"2-4 GB\",\n        MemoryAvailableGB > 4 and MemoryAvailableGB <= 8, \"4-8 GB\",\n        MemoryAvailableGB > 8 and MemoryAvailableGB <= 16, \"8-16 GB\",\n        MemoryAvailableGB > 16 and MemoryAvailableGB <= 32, \"16-32 GB\",\n        MemoryAvailableGB > 32 and MemoryAvailableGB <= 64, \"32-64 GB\",\n        MemoryAvailableGB > 64, \"64+ GB\",\n        \"Other\"\n    ),\n    BucketOrder = case(\n        MemoryAvailableGB >= 0 and MemoryAvailableGB <= 1, 1,\n        MemoryAvailableGB > 1 and MemoryAvailableGB <= 2, 2,\n        MemoryAvailableGB > 2 and MemoryAvailableGB <= 4, 3,\n        MemoryAvailableGB > 4 and MemoryAvailableGB <= 8, 4,\n        MemoryAvailableGB > 8 and MemoryAvailableGB <= 16, 5,\n        MemoryAvailableGB > 16 and MemoryAvailableGB <= 32, 6,\n        MemoryAvailableGB > 32 and MemoryAvailableGB <= 64, 7,\n        MemoryAvailableGB > 64, 8,\n        9\n    )\n| summarize SampleCount = count() by MemoryBucket, BucketOrder\n| extend \n    TotalSamples = toint(toscalar(MemoryData | project TotalMemorySamples)),\n    PercentageOfTime = round(100.0 * SampleCount / toint(toscalar(MemoryData | project TotalMemorySamples)), 2),\n    MemoryHealthZone = case(\n        MemoryBucket in (\"0-1 GB\", \"1-2 GB\"), \"🔴 Critical\",\n        MemoryBucket in (\"2-4 GB\"), \"🟠 Low\",\n        MemoryBucket in (\"4-8 GB\", \"8-16 GB\"), \"🟡 Moderate\",\n        MemoryBucket in (\"16-32 GB\", \"32-64 GB\", \"64+ GB\"), \"🟢 Abundant\",\n        \"⚪ Unknown\"\n    )\n| project \n    MemoryRange = MemoryBucket,\n    MemoryHealthZone,\n    SampleCount,\n    PercentageOfTime,\n    TotalSamples,\n    BucketOrder\n| order by BucketOrder asc",
+        "size": 1,
+        "title": "💾 Memory Availability Distribution Analysis",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalyticsWorkspace}"
+        ],
+        "visualization": "table",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "MemoryHealthZone",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "colors",
+                "thresholdsGrid": [
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "🟢",
+                    "representation": "green"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "🟡",
+                    "representation": "yellow"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "�",
+                    "representation": "orange"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "�🔴",
+                    "representation": "redBright"
+                  }
+                ]
+              }
+            },
+            {
+              "columnMatch": "PercentageOfTime",
+              "formatter": 12,
+              "formatOptions": {
+                "palette": "greenRed",
+                "reverse": true
               },
-              "title": "🖥️ CPU Usage Trend Over Time",
-              "description": "Historical CPU utilisation percentage - helps identify performance patterns and peak usage periods"
-          }
+              "numberFormat": {
+                "unit": 1,
+                "options": {
+                  "style": "decimal",
+                  "maximumFractionDigits": 2
+                }
+              }
+            },
+            {
+              "columnMatch": "SampleCount",
+              "formatter": 0,
+              "numberFormat": {
+                "unit": 17,
+                "options": {
+                  "style": "decimal"
+                }
+              }
+            },
+            {
+              "columnMatch": "BucketOrder",
+              "formatter": 5
+            }
+          ]
+        }
       },
-      {
-          "type": 3,
-          "content": {
-              "version": "KqlItem/1.0",
-              "query": "// Memory Usage Trend - Historical Data\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated {TimeRange}\n| where Namespace == \"Memory\" and Name == \"AvailableMB\"\n| summarize MemoryAvailableMB = avg(Val) by bin(TimeGenerated, 1h)\n| extend \n    MemoryAvailableGB = round(MemoryAvailableMB / 1024.0, 2),\n    MemoryStatus = case(\n        MemoryAvailableMB < 1024, \"Critical\",\n        MemoryAvailableMB < 2048, \"Low\",\n        MemoryAvailableMB < 4096, \"Moderate\",\n        \"Healthy\"\n    )\n| project TimeGenerated, MemoryAvailableGB, MemoryStatus\n| order by TimeGenerated asc",
-              "size": 1,
-              "queryType": 0,
-              "resourceType": "microsoft.operationalinsights/workspaces",
-              "crossComponentResources": [
-                  "{LogAnalyticsWorkspace}"
-              ],
-              "visualization": "linechart",
-              "chartSettings": {
-                  "xAxis": "TimeGenerated",
-                  "yAxis": [
-                      "MemoryAvailableGB"
-                  ],
-                  "showLegend": true,
-                  "showDataPoints": false,
-                  "yAxisMinimum": 0
+      "name": "query - 14"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "// Performance Distribution Analysis - Disk Space Buckets\nlet DiskData = \n    InsightsMetrics\n    | where Computer == '{SelectedMachine}'\n    | where TimeGenerated {TimeRange}\n    | where Namespace == \"LogicalDisk\" and Name == \"FreeSpacePercentage\"\n    | extend DiskFreePercent = round(Val, 1)\n    | summarize TotalDiskSamples = count();\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated {TimeRange}\n| where Namespace == \"LogicalDisk\" and Name == \"FreeSpacePercentage\"\n| extend DiskFreePercent = round(Val, 1)\n| extend \n    DiskBucket = case(\n        DiskFreePercent >= 0 and DiskFreePercent <= 10, \"0-10%\",\n        DiskFreePercent > 10 and DiskFreePercent <= 20, \"11-20%\",\n        DiskFreePercent > 20 and DiskFreePercent <= 30, \"21-30%\",\n        DiskFreePercent > 30 and DiskFreePercent <= 40, \"31-40%\",\n        DiskFreePercent > 40 and DiskFreePercent <= 50, \"41-50%\",\n        DiskFreePercent > 50 and DiskFreePercent <= 60, \"51-60%\",\n        DiskFreePercent > 60 and DiskFreePercent <= 70, \"61-70%\",\n        DiskFreePercent > 70 and DiskFreePercent <= 80, \"71-80%\",\n        DiskFreePercent > 80 and DiskFreePercent <= 90, \"81-90%\",\n        DiskFreePercent > 90 and DiskFreePercent <= 100, \"91-100%\",\n        \"Other\"\n    ),\n    BucketOrder = case(\n        DiskFreePercent >= 0 and DiskFreePercent <= 10, 1,\n        DiskFreePercent > 10 and DiskFreePercent <= 20, 2,\n        DiskFreePercent > 20 and DiskFreePercent <= 30, 3,\n        DiskFreePercent > 30 and DiskFreePercent <= 40, 4,\n        DiskFreePercent > 40 and DiskFreePercent <= 50, 5,\n        DiskFreePercent > 50 and DiskFreePercent <= 60, 6,\n        DiskFreePercent > 60 and DiskFreePercent <= 70, 7,\n        DiskFreePercent > 70 and DiskFreePercent <= 80, 8,\n        DiskFreePercent > 80 and DiskFreePercent <= 90, 9,\n        DiskFreePercent > 90 and DiskFreePercent <= 100, 10,\n        11\n    )\n| summarize SampleCount = count() by DiskBucket, BucketOrder\n| extend \n    TotalSamples = toint(toscalar(DiskData | project TotalDiskSamples)),\n    PercentageOfTime = round(100.0 * SampleCount / toint(toscalar(DiskData | project TotalDiskSamples)), 2),\n    DiskHealthZone = case(\n        DiskBucket in (\"0-10%\", \"11-20%\"), \"🔴 Critical\",\n        DiskBucket in (\"21-30%\", \"31-40%\"), \"🟠 Low Space\",\n        DiskBucket in (\"41-50%\", \"51-60%\"), \"🟡 Moderate\",\n        DiskBucket in (\"61-70%\", \"71-80%\", \"81-90%\", \"91-100%\"), \"🟢 Healthy\",\n        \"⚪ Unknown\"\n    )\n| project \n    DiskFreeRange = DiskBucket,\n    DiskHealthZone,\n    SampleCount,\n    PercentageOfTime,\n    TotalSamples,\n    BucketOrder\n| order by BucketOrder asc",
+        "size": 1,
+        "title": "💿 Disk Free Space Distribution Analysis",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalyticsWorkspace}"
+        ],
+        "visualization": "table",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "DiskHealthZone",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "colors",
+                "thresholdsGrid": [
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "🟢",
+                    "representation": "green"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "🟡",
+                    "representation": "yellow"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "🟠",
+                    "representation": "orange"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "🔴",
+                    "representation": "redBright"
+                  }
+                ]
+              }
+            },
+            {
+              "columnMatch": "PercentageOfTime",
+              "formatter": 12,
+              "formatOptions": {
+                "palette": "redGreen"
               },
-              "title": "💾 Memory Availability Trend Over Time",
-              "description": "Historical available memory in GB - shows memory consumption patterns and helps plan capacity"
-          }
+              "numberFormat": {
+                "unit": 1,
+                "options": {
+                  "style": "decimal",
+                  "maximumFractionDigits": 2
+                }
+              }
+            },
+            {
+              "columnMatch": "SampleCount",
+              "formatter": 0,
+              "numberFormat": {
+                "unit": 17,
+                "options": {
+                  "style": "decimal"
+                }
+              }
+            },
+            {
+              "columnMatch": "BucketOrder",
+              "formatter": 5
+            }
+          ]
+        }
       },
-      {
-          "type": 3,
-          "content": {
-              "version": "KqlItem/1.0",
-              "query": "// Disk IOPS Trend - Historical Data (Robust)\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated {TimeRange}\n| where Namespace == \"LogicalDisk\"\n    and Name in (\"ReadsPerSecond\", \"WritesPerSecond\")\n| summarize \n    ReadsPerSec = avgif(Val, Name == \"ReadsPerSecond\"),\n    WritesPerSec = avgif(Val, Name == \"WritesPerSecond\")\n    by bin(TimeGenerated, 1h)\n| extend \n    ReadsPerSec = coalesce(ReadsPerSec, 0.0),\n    WritesPerSec = coalesce(WritesPerSec, 0.0),\n    TotalIOPS = ReadsPerSec + WritesPerSec\n| extend IOPSStatus = case(\n        TotalIOPS > 1000, \"🔴 High\",\n        TotalIOPS > 500, \"🟠 Moderate\",\n        TotalIOPS > 100, \"🟡 Low\",\n        \"🟢 Normal\"\n    )\n| project TimeGenerated, TotalIOPS, ReadsPerSec, WritesPerSec, IOPSStatus\n| order by TimeGenerated asc",
-              "size": 1,
-              "queryType": 0,
-              "resourceType": "microsoft.operationalinsights/workspaces",
-              "crossComponentResources": [
-                  "{LogAnalyticsWorkspace}"
-              ],
-              "visualization": "linechart",
-              "chartSettings": {
-                  "xAxis": "TimeGenerated",
-                  "yAxis": [
-                        "TotalIOPS",
-                        "ReadsPerSec",
-                        "WritesPerSec"
-                  ],
-                  "showLegend": true,
-                  "showDataPoints": false,
-                  "yAxisMinimum": 0,
-                  "yAxisMaximum": 100
-              },
-              "title": "💽 Disk IOPs Trend Over Time",
-              "description": "Historical disk IOPS - tracks storage performance and helps identify potential bottlenecks"
-          }
-      },
-      {
-          "type": 3,
-          "content": {
-              "version": "KqlItem/1.0",
-              "query": "// Disk Free Space Trend - Historical Data\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated {TimeRange}\n| where Namespace == \"LogicalDisk\" and Name == \"FreeSpacePercentage\"\n| summarize DiskFreeSpace = avg(Val) by bin(TimeGenerated, 1h)\n| extend \n    DiskStatus = case(\n        DiskFreeSpace < 10, \"Critical\",\n        DiskFreeSpace < 20, \"Low\",\n        DiskFreeSpace < 40, \"Moderate\",\n        \"Healthy\"\n    )\n| project TimeGenerated, DiskFreeSpace, DiskStatus\n| order by TimeGenerated asc",
-              "size": 1,
-              "queryType": 0,
-              "resourceType": "microsoft.operationalinsights/workspaces",
-              "crossComponentResources": [
-                  "{LogAnalyticsWorkspace}"
-              ],
-              "visualization": "linechart",
-              "chartSettings": {
-                  "xAxis": "TimeGenerated",
-                  "yAxis": [
-                      "DiskFreeSpace"
-                  ],
-                  "showLegend": true,
-                  "showDataPoints": false,
-                  "yAxisMinimum": 0,
-                  "yAxisMaximum": 100
-              },
-              "title": "💽 Disk Free Space Trend Over Time",
-              "description": "Historical disk free space percentage - tracks storage consumption and helps prevent disk full situations"
-          }
-      },
-      {
-          "type": 1,
-          "content": {
-              "json": "### 📊 **Performance Pattern Analysis**\n\n**What These Tables Show**: The next three tables break down your machine's performance into different ranges (called 'buckets') and show you what percentage of time your machine operates in each range.\n\n**Why This Helps**: Instead of just seeing averages, you can see the full picture - for example, if your CPU averages 50%, these tables tell you whether it's consistently at 50% or bouncing between 20% and 80%. This helps you plan for capacity and spot performance patterns."
-          }
-      },
-      {
-          "type": 3,
-          "content": {
-              "version": "KqlItem/1.0",
-              "query": "// Performance Distribution Analysis - CPU Usage Buckets\nlet CPUData = \n    InsightsMetrics\n    | where Computer == '{SelectedMachine}'\n    | where TimeGenerated {TimeRange}\n    | where Namespace == \"Processor\" and Name == \"UtilizationPercentage\"\n    | extend CPUUsage = round(Val, 1)\n    | summarize TotalCPUSamples = count();\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated {TimeRange}\n| where Namespace == \"Processor\" and Name == \"UtilizationPercentage\"\n| extend CPUUsage = round(Val, 1)\n| extend \n    UsageBucket = case(\n        CPUUsage >= 0 and CPUUsage <= 10, \"0-10%\",\n        CPUUsage > 10 and CPUUsage <= 20, \"11-20%\",\n        CPUUsage > 20 and CPUUsage <= 30, \"21-30%\",\n        CPUUsage > 30 and CPUUsage <= 40, \"31-40%\",\n        CPUUsage > 40 and CPUUsage <= 50, \"41-50%\",\n        CPUUsage > 50 and CPUUsage <= 60, \"51-60%\",\n        CPUUsage > 60 and CPUUsage <= 70, \"61-70%\",\n        CPUUsage > 70 and CPUUsage <= 80, \"71-80%\",\n        CPUUsage > 80 and CPUUsage <= 90, \"81-90%\",\n        CPUUsage > 90 and CPUUsage <= 100, \"91-100%\",\n        \"Other\"\n    ),\n    BucketOrder = case(\n        CPUUsage >= 0 and CPUUsage <= 10, 1,\n        CPUUsage > 10 and CPUUsage <= 20, 2,\n        CPUUsage > 20 and CPUUsage <= 30, 3,\n        CPUUsage > 30 and CPUUsage <= 40, 4,\n        CPUUsage > 40 and CPUUsage <= 50, 5,\n        CPUUsage > 50 and CPUUsage <= 60, 6,\n        CPUUsage > 60 and CPUUsage <= 70, 7,\n        CPUUsage > 70 and CPUUsage <= 80, 8,\n        CPUUsage > 80 and CPUUsage <= 90, 9,\n        CPUUsage > 90 and CPUUsage <= 100, 10,\n        11\n    )\n| summarize SampleCount = count() by UsageBucket, BucketOrder\n| extend \n    TotalSamples = toint(toscalar(CPUData | project TotalCPUSamples)),\n    PercentageOfTime = round(100.0 * SampleCount / toint(toscalar(CPUData | project TotalCPUSamples)), 2),\n    PerformanceZone = case(\n        UsageBucket in (\"0-10%\", \"11-20%\", \"21-30%\"), \"🟢 Optimal\",\n        UsageBucket in (\"31-40%\", \"41-50%\", \"51-60%\"), \"🟡 Normal\",\n        UsageBucket in (\"61-70%\", \"71-80%\"), \"🟠 Busy\",\n        UsageBucket in (\"81-90%\", \"91-100%\"), \"🔴 Stressed\",\n        \"⚪ Unknown\"\n    )\n| project \n    CPURange = UsageBucket,\n    PerformanceZone,\n    SampleCount,\n    PercentageOfTime,\n    TotalSamples,\n    BucketOrder\n| order by BucketOrder asc",
-              "size": 1,
-              "queryType": 0,
-              "resourceType": "microsoft.operationalinsights/workspaces",
-              "crossComponentResources": [
-                  "{LogAnalyticsWorkspace}"
-              ],
-              "visualization": "table",
-              "gridSettings": {
-                  "formatters": [
-                      {
-                          "columnMatch": "PerformanceZone",
-                          "formatter": 18,
-                          "formatOptions": {
-                              "thresholdsOptions": "colors",
-                              "thresholdsGrid": [
-                                  {
-                                      "operator": "contains",
-                                      "thresholdValue": "🟢",
-                                      "representation": "green"
-                                  },
-                                  {
-                                      "operator": "contains",
-                                      "thresholdValue": "🟡",
-                                      "representation": "yellow"
-                                  },
-                                  {
-                                      "operator": "contains",
-                                      "thresholdValue": "🟠",
-                                      "representation": "orange"
-                                  },
-                                  {
-                                      "operator": "contains",
-                                      "thresholdValue": "🔴",
-                                      "representation": "redBright"
-                                  }
-                              ]
-                          }
-                      },
-                      {
-                          "columnMatch": "PercentageOfTime",
-                          "formatter": 12,
-                          "formatOptions": {
-                              "palette": "greenRed"
-                          },
-                          "numberFormat": {
-                              "unit": 1,
-                              "options": {
-                                  "style": "decimal",
-                                  "maximumFractionDigits": 2
-                              }
-                          }
-                      },
-                      {
-                          "columnMatch": "SampleCount",
-                          "formatter": 0,
-                          "numberFormat": {
-                              "unit": 17,
-                              "options": {
-                                  "style": "decimal"
-                              }
-                          }
-                      },
-                      {
-                          "columnMatch": "BucketOrder",
-                          "formatter": 5
-                      }
-                  ]
-              },
-              "title": "📊 CPU Usage Distribution Analysis",
-              "description": "Shows how often your CPU runs at different usage levels - helps you understand if your machine typically runs smoothly (0-30%), normally busy (31-60%), or frequently stressed (61-100%). Each row shows what percentage of time your CPU spent in that usage range."
-          }
-      },
-      {
-          "type": 3,
-          "content": {
-              "version": "KqlItem/1.0",
-              "query": "// Performance Distribution Analysis - Memory Usage Buckets\nlet MemoryData = \n    InsightsMetrics\n    | where Computer == '{SelectedMachine}'\n    | where TimeGenerated {TimeRange}\n    | where Namespace == \"Memory\" and Name == \"AvailableMB\"\n    | extend MemoryAvailableGB = round(Val / 1024.0, 1)\n    | summarize TotalMemorySamples = count();\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated {TimeRange}\n| where Namespace == \"Memory\" and Name == \"AvailableMB\"\n| extend MemoryAvailableGB = round(Val / 1024.0, 1)\n| extend \n    MemoryBucket = case(\n        MemoryAvailableGB >= 0 and MemoryAvailableGB <= 1, \"0-1 GB\",\n        MemoryAvailableGB > 1 and MemoryAvailableGB <= 2, \"1-2 GB\",\n        MemoryAvailableGB > 2 and MemoryAvailableGB <= 4, \"2-4 GB\",\n        MemoryAvailableGB > 4 and MemoryAvailableGB <= 8, \"4-8 GB\",\n        MemoryAvailableGB > 8 and MemoryAvailableGB <= 16, \"8-16 GB\",\n        MemoryAvailableGB > 16 and MemoryAvailableGB <= 32, \"16-32 GB\",\n        MemoryAvailableGB > 32 and MemoryAvailableGB <= 64, \"32-64 GB\",\n        MemoryAvailableGB > 64, \"64+ GB\",\n        \"Other\"\n    ),\n    BucketOrder = case(\n        MemoryAvailableGB >= 0 and MemoryAvailableGB <= 1, 1,\n        MemoryAvailableGB > 1 and MemoryAvailableGB <= 2, 2,\n        MemoryAvailableGB > 2 and MemoryAvailableGB <= 4, 3,\n        MemoryAvailableGB > 4 and MemoryAvailableGB <= 8, 4,\n        MemoryAvailableGB > 8 and MemoryAvailableGB <= 16, 5,\n        MemoryAvailableGB > 16 and MemoryAvailableGB <= 32, 6,\n        MemoryAvailableGB > 32 and MemoryAvailableGB <= 64, 7,\n        MemoryAvailableGB > 64, 8,\n        9\n    )\n| summarize SampleCount = count() by MemoryBucket, BucketOrder\n| extend \n    TotalSamples = toint(toscalar(MemoryData | project TotalMemorySamples)),\n    PercentageOfTime = round(100.0 * SampleCount / toint(toscalar(MemoryData | project TotalMemorySamples)), 2),\n    MemoryHealthZone = case(\n        MemoryBucket in (\"0-1 GB\", \"1-2 GB\"), \"🔴 Critical\",\n        MemoryBucket in (\"2-4 GB\"), \"🟠 Low\",\n        MemoryBucket in (\"4-8 GB\", \"8-16 GB\"), \"🟡 Moderate\",\n        MemoryBucket in (\"16-32 GB\", \"32-64 GB\", \"64+ GB\"), \"🟢 Abundant\",\n        \"⚪ Unknown\"\n    )\n| project \n    MemoryRange = MemoryBucket,\n    MemoryHealthZone,\n    SampleCount,\n    PercentageOfTime,\n    TotalSamples,\n    BucketOrder\n| order by BucketOrder asc",
-              "size": 1,
-              "queryType": 0,
-              "resourceType": "microsoft.operationalinsights/workspaces",
-              "crossComponentResources": [
-                  "{LogAnalyticsWorkspace}"
-              ],
-              "visualization": "table",
-              "gridSettings": {
-                  "formatters": [
-                      {
-                          "columnMatch": "MemoryHealthZone",
-                          "formatter": 18,
-                          "formatOptions": {
-                              "thresholdsOptions": "colors",
-                              "thresholdsGrid": [
-                                  {
-                                      "operator": "contains",
-                                      "thresholdValue": "🟢",
-                                      "representation": "green"
-                                  },
-                                  {
-                                      "operator": "contains",
-                                      "thresholdValue": "🟡",
-                                      "representation": "yellow"
-                                  },
-                                  {
-                                      "operator": "contains",
-                                      "thresholdValue": "�",
-                                      "representation": "orange"
-                                  },
-                                  {
-                                      "operator": "contains",
-                                      "thresholdValue": "�🔴",
-                                      "representation": "redBright"
-                                  }
-                              ]
-                          }
-                      },
-                      {
-                          "columnMatch": "PercentageOfTime",
-                          "formatter": 12,
-                          "formatOptions": {
-                              "palette": "greenRed",
-                              "reverse": true
-                          },
-                          "numberFormat": {
-                              "unit": 1,
-                              "options": {
-                                  "style": "decimal",
-                                  "maximumFractionDigits": 2
-                              }
-                          }
-                      },
-                      {
-                          "columnMatch": "SampleCount",
-                          "formatter": 0,
-                          "numberFormat": {
-                              "unit": 17,
-                              "options": {
-                                  "style": "decimal"
-                              }
-                          }
-                      },
-                      {
-                          "columnMatch": "BucketOrder",
-                          "formatter": 5
-                      }
-                  ]
-              },
-              "title": "💾 Memory Availability Distribution Analysis",
-              "description": "Shows how much free memory your machine typically has available - helps you spot if you're often running low on memory (red zones) or have plenty to spare (green zones). Each row shows what percentage of time your machine had that amount of free memory."
-          }
-      },
-      {
-          "type": 3,
-          "content": {
-              "version": "KqlItem/1.0",
-              "query": "// Performance Distribution Analysis - Disk Space Buckets\nlet DiskData = \n    InsightsMetrics\n    | where Computer == '{SelectedMachine}'\n    | where TimeGenerated {TimeRange}\n    | where Namespace == \"LogicalDisk\" and Name == \"FreeSpacePercentage\"\n    | extend DiskFreePercent = round(Val, 1)\n    | summarize TotalDiskSamples = count();\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated {TimeRange}\n| where Namespace == \"LogicalDisk\" and Name == \"FreeSpacePercentage\"\n| extend DiskFreePercent = round(Val, 1)\n| extend \n    DiskBucket = case(\n        DiskFreePercent >= 0 and DiskFreePercent <= 10, \"0-10%\",\n        DiskFreePercent > 10 and DiskFreePercent <= 20, \"11-20%\",\n        DiskFreePercent > 20 and DiskFreePercent <= 30, \"21-30%\",\n        DiskFreePercent > 30 and DiskFreePercent <= 40, \"31-40%\",\n        DiskFreePercent > 40 and DiskFreePercent <= 50, \"41-50%\",\n        DiskFreePercent > 50 and DiskFreePercent <= 60, \"51-60%\",\n        DiskFreePercent > 60 and DiskFreePercent <= 70, \"61-70%\",\n        DiskFreePercent > 70 and DiskFreePercent <= 80, \"71-80%\",\n        DiskFreePercent > 80 and DiskFreePercent <= 90, \"81-90%\",\n        DiskFreePercent > 90 and DiskFreePercent <= 100, \"91-100%\",\n        \"Other\"\n    ),\n    BucketOrder = case(\n        DiskFreePercent >= 0 and DiskFreePercent <= 10, 1,\n        DiskFreePercent > 10 and DiskFreePercent <= 20, 2,\n        DiskFreePercent > 20 and DiskFreePercent <= 30, 3,\n        DiskFreePercent > 30 and DiskFreePercent <= 40, 4,\n        DiskFreePercent > 40 and DiskFreePercent <= 50, 5,\n        DiskFreePercent > 50 and DiskFreePercent <= 60, 6,\n        DiskFreePercent > 60 and DiskFreePercent <= 70, 7,\n        DiskFreePercent > 70 and DiskFreePercent <= 80, 8,\n        DiskFreePercent > 80 and DiskFreePercent <= 90, 9,\n        DiskFreePercent > 90 and DiskFreePercent <= 100, 10,\n        11\n    )\n| summarize SampleCount = count() by DiskBucket, BucketOrder\n| extend \n    TotalSamples = toint(toscalar(DiskData | project TotalDiskSamples)),\n    PercentageOfTime = round(100.0 * SampleCount / toint(toscalar(DiskData | project TotalDiskSamples)), 2),\n    DiskHealthZone = case(\n        DiskBucket in (\"0-10%\", \"11-20%\"), \"🔴 Critical\",\n        DiskBucket in (\"21-30%\", \"31-40%\"), \"🟠 Low Space\",\n        DiskBucket in (\"41-50%\", \"51-60%\"), \"🟡 Moderate\",\n        DiskBucket in (\"61-70%\", \"71-80%\", \"81-90%\", \"91-100%\"), \"🟢 Healthy\",\n        \"⚪ Unknown\"\n    )\n| project \n    DiskFreeRange = DiskBucket,\n    DiskHealthZone,\n    SampleCount,\n    PercentageOfTime,\n    TotalSamples,\n    BucketOrder\n| order by BucketOrder asc",
-              "size": 1,
-              "queryType": 0,
-              "resourceType": "microsoft.operationalinsights/workspaces",
-              "crossComponentResources": [
-                  "{LogAnalyticsWorkspace}"
-              ],
-              "visualization": "table",
-              "gridSettings": {
-                  "formatters": [
-                      {
-                          "columnMatch": "DiskHealthZone",
-                          "formatter": 18,
-                          "formatOptions": {
-                              "thresholdsOptions": "colors",
-                              "thresholdsGrid": [
-                                  {
-                                      "operator": "contains",
-                                      "thresholdValue": "🟢",
-                                      "representation": "green"
-                                  },
-                                  {
-                                      "operator": "contains",
-                                      "thresholdValue": "🟡",
-                                      "representation": "yellow"
-                                  },
-                                  {
-                                      "operator": "contains",
-                                      "thresholdValue": "🟠",
-                                      "representation": "orange"
-                                  },
-                                  {
-                                      "operator": "contains",
-                                      "thresholdValue": "🔴",
-                                      "representation": "redBright"
-                                  }
-                              ]
-                          }
-                      },
-                      {
-                          "columnMatch": "PercentageOfTime",
-                          "formatter": 12,
-                          "formatOptions": {
-                              "palette": "redGreen"
-                          },
-                          "numberFormat": {
-                              "unit": 1,
-                              "options": {
-                                  "style": "decimal",
-                                  "maximumFractionDigits": 2
-                              }
-                          }
-                      },
-                      {
-                          "columnMatch": "SampleCount",
-                          "formatter": 0,
-                          "numberFormat": {
-                              "unit": 17,
-                              "options": {
-                                  "style": "decimal"
-                              }
-                          }
-                      },
-                      {
-                          "columnMatch": "BucketOrder",
-                          "formatter": 5
-                      }
-                  ]
-              },
-              "title": "💿 Disk Free Space Distribution Analysis",
-              "description": "Shows how much free disk space your machine usually has - helps you see if you're often running low on storage (red zones) or have healthy amounts of free space (green zones). Each row shows what percentage of time your disk had that amount of free space available."
-          }
-      }
+      "name": "query - 15"
+    }
   ],
-  "styleSettings": {
-      "fontFamily": "Segoe UI",
-      "fontSize": 14
-  },
+  "fallbackResourceIds": [
+    "azure monitor"
+  ],
   "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
 }

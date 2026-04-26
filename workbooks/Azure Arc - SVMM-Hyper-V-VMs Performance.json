@@ -4,7 +4,282 @@
     {
       "type": 1,
       "content": {
-        "json": "# 🤖 Azure Arc Machine Intelligence Centre\n\n## **Your Complete Single-Machine Dashboard**\n\n**🎯 What This Does**: Get a complete 360-degree view of any Azure Arc machine in your organisation with just one click.\n\n**✨ What You'll See:**\n- **🔍 Live Performance Data** - CPU, memory, disk, and network activity\n- **🚀 Why This Matters**: This dashboard shows how Azure Arc transforms any machine into a fully managed, monitored, and secured part of your cloud environment with real-time vulnerability intelligence.\n\n---\n\n### 📋 **Select Analysis Period**"
+        "json": "# 🤖 Azure Arc Machine Performance Dashboard\n\n---\n\n### 📋 **Hyper-V Host Performance Insights**\n\n***Select Analysis Parameters***"
+      },
+      "name": "title"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "time-range",
+            "version": "KqlParameterItem/1.0",
+            "name": "HostTimeRange",
+            "type": 4,
+            "label": "📅 Analysis Period",
+            "value": {
+              "durationMs": 3600000
+            },
+            "typeSettings": {
+              "selectableValues": [
+                {
+                  "durationMs": 3600000
+                },
+                {
+                  "durationMs": 14400000
+                },
+                {
+                  "durationMs": 43200000
+                },
+                {
+                  "durationMs": 86400000
+                },
+                {
+                  "durationMs": 259200000
+                },
+                {
+                  "durationMs": 604800000
+                },
+                {
+                  "durationMs": 1209600000
+                },
+                {
+                  "durationMs": 2592000000
+                }
+              ],
+              "allowCustom": true
+            }
+          },
+          {
+            "id": "workspace-selector",
+            "version": "KqlParameterItem/1.0",
+            "name": "LogAnalyticsWorkspace",
+            "type": 5,
+            "label": "📊 Log Analytics Workspace",
+            "query": "where type =~ 'microsoft.operationalinsights/workspaces'",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "resourceTypeFilter": {
+                "microsoft.operationalinsights/workspaces": true
+              },
+              "showDefault": false
+            },
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          }
+        ],
+        "style": "pills",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "parameters - 1"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## 🔥 **Host Disk Space Information**"
+      },
+      "name": "text - 2"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "InsightsMetrics\r\n| where TimeGenerated {HostTimeRange}\r\n| where Namespace == \"LogicalDisk\"\r\n| where Name in (\"FreeSpaceMB\", \"FreeSpacePercentage\")\r\n| extend TagsJson = parse_json(Tags)\r\n| extend\r\n    Drive = tostring(TagsJson[\"vm.azm.ms/mountId\"]),\r\n    DiskSizeMB = todouble(TagsJson[\"vm.azm.ms/diskSizeMB\"])\r\n| extend\r\n    FreeSpaceMB = iff(Name == \"FreeSpaceMB\", todouble(Val), real(null)),\r\n    FreePct = iff(Name == \"FreeSpacePercentage\", todouble(Val), real(null))\r\n| summarize\r\n    AvgFreeSpaceGB = round(avg(FreeSpaceMB) / 1024, 2),\r\n    AvgFreePct = round(avg(FreePct), 2)\r\n    by Computer, Drive\r\n| order by Computer asc, Drive asc\r\n| project Computer, Drive, AvgFreeSpaceGB, AvgFreePct",
+        "size": 2,
+        "aggregation": 3,
+        "title": "💾 Disk Free Space (GB)",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalyticsWorkspace}"
+        ],
+        "visualization": "barchart",
+        "tileSettings": {
+          "showBorder": false,
+          "titleContent": {
+            "columnMatch": "Drive",
+            "formatter": 1
+          },
+          "leftContent": {
+            "columnMatch": "AvgFreeSpaceGB",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            },
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "Drive",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "AvgFreeSpaceGB",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "chartSettings": {
+          "xAxis": "Computer",
+          "yAxis": [
+            "AvgFreeSpaceGB"
+          ],
+          "group": "Drive",
+          "createOtherGroup": null,
+          "showLegend": true
+        }
+      },
+      "name": "query - 8"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "InsightsMetrics | where TimeGenerated {HostTimeRange} | where Namespace == \"Memory\" | where Name == \"AvailableMB\" | extend TagsJson = parse_json(Tags) | extend TotalMemoryMB = todouble(TagsJson['vm.azm.ms/memorySizeMB']) | extend AvailableMB = todouble(Val) | summarize AvgAvailableGB = round(avg(AvailableMB) / 1024, 2), TotalMemoryGB = round(avg(TotalMemoryMB) / 1024, 2) by Computer | extend UsedGB = round(TotalMemoryGB - AvgAvailableGB, 2) | project Computer, AvgAvailableGB, UsedGB",
+        "size": 0,
+        "aggregation": 3,
+        "title": "💾 Available Memory (GB)",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalyticsWorkspace}"
+        ],
+        "visualization": "barchart",
+        "tileSettings": {
+          "showBorder": false,
+          "titleContent": {
+            "columnMatch": "Computer",
+            "formatter": 1
+          },
+          "leftContent": {
+            "columnMatch": "AvgAvailableGB",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            },
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "Drive",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "AvgAvailableGB",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "chartSettings": {
+          "xAxis": "Computer",
+          "yAxis": [
+            "AvgAvailableGB"
+          ],
+          "showLegend": true
+        }
+      },
+      "name": "query - 8"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "InsightsMetrics | where TimeGenerated {HostTimeRange} | where Namespace == \"Processor\" | where Name == \"UtilizationPercentage\" | extend CPUUtil = todouble(Val) | summarize AvgCPU = round(avg(CPUUtil), 2) by Computer | order by AvgCPU desc",
+        "size": 0,
+        "aggregation": 3,
+        "title": "💻 CPU Utilization (%)",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalyticsWorkspace}"
+        ],
+        "visualization": "barchart",
+        "tileSettings": {
+          "showBorder": false,
+          "titleContent": {
+            "columnMatch": "Computer",
+            "formatter": 1
+          },
+          "leftContent": {
+            "columnMatch": "AvgCPU",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            },
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "Computer",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "AvgCPU",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "chartSettings": {
+          "xAxis": "Computer",
+          "yAxis": [
+            "AvgCPU"
+          ],
+          "showLegend": true
+        }
+      },
+      "name": "query - 8"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "\n\n---\n\n📋 **Virtual Machine Performance Insights**\n\n***Select Analysis Parameters***"
       },
       "name": "title"
     },
@@ -122,7 +397,7 @@
     {
       "type": 1,
       "content": {
-        "json": "## 🔥 **Fleet Hotspots - Top CPU &amp; Memory Utilisation**\n\n**What You're Looking At**: The highest-utilisation machines across your connected estate for the selected analysis period.\n\n**Why This Matters**: Quickly identify the busiest machines before drilling into a single machine's detailed view. These lists highlight systems averaging more than **65%** utilisation so you can prioritise investigation and capacity planning."
+        "json": "## 🔥 **Top CPU &amp; Memory Utilisation**\n\n**What You're Looking At**: The highest-utilisation machines across your connected estate for the selected analysis period."
       },
       "name": "text - 2"
     },
@@ -265,7 +540,7 @@
     {
       "type": 1,
       "content": {
-        "json": "## 🔍 **Detailed Machine Performance Utilisation**\n\n**What You're Looking At**: A detailed view of machine performance across your connected estate for the selected analysis period.\n\n**Why This Matters**: Deep diving into a single machine's detailed view.\n\n---\n\n### 📋 **Select the machine**"
+        "json": "## 🔍 **Detailed Machine Performance Utilisation**\n\n**What You're Looking At**: A detailed view of machine performance across your connected estate for the selected analysis period.\n\n---\n\n### 📋 **Select the machine**"
       },
       "name": "text - 5"
     },

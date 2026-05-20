@@ -81,15 +81,71 @@
     {
       "type": 1,
       "content": {
-        "json": "## 🔥 **Host Disk Space Information**"
+        "json": "## 🖥️ VM Capacity Estimation (4 vCPU / 4 GB per VM)\n\n#### 📖 Column Reference\n\n| Column | Description |\n|--------|-------------|\n| **TotalCpus** | Total logical CPU cores available on the Hyper-V host |\n| **AvgCPU** | Average CPU utilisation (%) over the selected time range |\n| **UsedCores** | Estimated cores currently in use (`AvgCPU% × TotalCpus`) |\n| **FreeCores** | Estimated cores not in use (`TotalCpus − UsedCores`) |\n| **FreeGB** | Average free RAM (GB) on the host over the selected time range |\n| **VMs_CPU** | Estimated additional VMs the host can support based on **free CPU cores** (assumes 4 vCPUs per VM) |\n| **VMs_MEM** | Estimated additional VMs the host can support based on **free memory** (assumes 4 GB RAM per VM) |\n| **MaxVMs** | The **lower** of VMs_CPU and VMs_MEM — the true bottleneck capacity |\n\n> ⚠️ **Assumption**: Each VM is sized at **4 vCPUs** and **4 GB RAM**. Adjust the divisors in the query if your VM templates use different sizes."
       },
-      "name": "text - 2"
+      "name": "text - capacity-legend"
     },
     {
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "InsightsMetrics\r\n| where TimeGenerated {HostTimeRange}\r\n| where Namespace == \"LogicalDisk\"\r\n| where Name in (\"FreeSpaceMB\", \"FreeSpacePercentage\")\r\n| extend TagsJson = parse_json(Tags)\r\n| extend\r\n    Drive = tostring(TagsJson[\"vm.azm.ms/mountId\"]),\r\n    DiskSizeMB = todouble(TagsJson[\"vm.azm.ms/diskSizeMB\"])\r\n| extend\r\n    FreeSpaceMB = iff(Name == \"FreeSpaceMB\", todouble(Val), real(null)),\r\n    FreePct = iff(Name == \"FreeSpacePercentage\", todouble(Val), real(null))\r\n| summarize\r\n    AvgFreeSpaceGB = round(avg(FreeSpaceMB) / 1024, 2),\r\n    AvgFreePct = round(avg(FreePct), 2)\r\n    by Computer, Drive\r\n| order by Computer asc, Drive asc\r\n| project Computer, Drive, AvgFreeSpaceGB, AvgFreePct",
+        "query": "// Hyper-V Host VM Capacity Estimation (assumes 4 vCPU + 4 GB RAM per VM)\nlet cpu =\n    InsightsMetrics\n    | where TimeGenerated {HostTimeRange}\n    | where Computer == \"WS-HV01\"\n    | where Namespace == \"Processor\" and Name == \"UtilizationPercentage\"\n    | extend CPUUtil = todouble(Val)\n    | extend TagsJson = parse_json(Tags)\n    | extend TotalCpus = toint(TagsJson[\"vm.azm.ms/totalCpus\"])\n    | summarize AvgCPU = avg(CPUUtil), TotalCpus = max(TotalCpus) by Computer\n    | where isnotnull(TotalCpus) and TotalCpus > 0\n    | extend\n        UsedCores = (AvgCPU / 100.0) * TotalCpus,\n        FreeCores = TotalCpus - ((AvgCPU / 100.0) * TotalCpus);\nlet mem =\n    InsightsMetrics\n    | where TimeGenerated {HostTimeRange}\n    | where Computer == \"WS-HV01\"\n    | where Namespace == \"Memory\" and Name == \"AvailableMB\"\n    | summarize AvgFreeMB = avg(todouble(Val)) by Computer\n    | extend FreeGB = AvgFreeMB / 1024;\ncpu\n| join kind=inner mem on Computer\n| extend\n    VMs_CPU = FreeCores / 4.0,\n    VMs_MEM = FreeGB / 4.0\n| extend MaxVMs = toint(iif(VMs_CPU < VMs_MEM, VMs_CPU, VMs_MEM))\n| project\n    Computer,\n    TotalCpus,\n    AvgCPU = round(AvgCPU, 2),\n    UsedCores = round(UsedCores, 2),\n    FreeCores = round(FreeCores, 2),\n    FreeGB = round(FreeGB, 2),\n    VMs_CPU = round(VMs_CPU, 2),\n    VMs_MEM = round(VMs_MEM, 2),\n    MaxVMs",
+        "size": 1,
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalyticsWorkspace}"
+        ],
+        "visualization": "table",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "MaxVMs",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "colors",
+                "thresholdsGrid": [
+                  {
+                    "operator": "==",
+                    "thresholdValue": "0",
+                    "representation": "redBright"
+                  },
+                  {
+                    "operator": "<=",
+                    "thresholdValue": "3",
+                    "representation": "orange"
+                  },
+                  {
+                    "operator": "Default",
+                    "representation": "green"
+                  }
+                ]
+              }
+            },
+            {
+              "columnMatch": "AvgCPU",
+              "formatter": 12,
+              "formatOptions": {
+                "palette": "greenRed"
+              },
+              "numberFormat": {
+                "unit": 1,
+                "options": {
+                  "style": "decimal",
+                  "maximumFractionDigits": 2
+                }
+              }
+            }
+          ]
+        }
+      },
+      "name": "query - capacity"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "InsightsMetrics\r\n| where TimeGenerated {HostTimeRange}\r\n | where Computer == \"WS-HV01\" | where Namespace == \"LogicalDisk\"\r\n| where Name in (\"FreeSpaceMB\", \"FreeSpacePercentage\")\r\n| extend TagsJson = parse_json(Tags)\r\n| extend\r\n    Drive = tostring(TagsJson[\"vm.azm.ms/mountId\"]),\r\n    DiskSizeMB = todouble(TagsJson[\"vm.azm.ms/diskSizeMB\"])\r\n| extend\r\n    FreeSpaceMB = iff(Name == \"FreeSpaceMB\", todouble(Val), real(null)),\r\n    FreePct = iff(Name == \"FreeSpacePercentage\", todouble(Val), real(null))\r\n| summarize\r\n    AvgFreeSpaceGB = round(avg(FreeSpaceMB) / 1024, 2),\r\n    AvgFreePct = round(avg(FreePct), 2)\r\n    by Computer, Drive\r\n| order by Computer asc, Drive asc\r\n| project Computer, Drive, AvgFreeSpaceGB, AvgFreePct",
         "size": 2,
         "aggregation": 3,
         "title": "💾 Disk Free Space (GB)",
@@ -154,7 +210,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "InsightsMetrics | where TimeGenerated {HostTimeRange} | where Namespace == \"Memory\" | where Name == \"AvailableMB\" | extend TagsJson = parse_json(Tags) | extend TotalMemoryMB = todouble(TagsJson['vm.azm.ms/memorySizeMB']) | extend AvailableMB = todouble(Val) | summarize AvgAvailableGB = round(avg(AvailableMB) / 1024, 2), TotalMemoryGB = round(avg(TotalMemoryMB) / 1024, 2) by Computer | extend UsedGB = round(TotalMemoryGB - AvgAvailableGB, 2) | project Computer, AvgAvailableGB, UsedGB",
+        "query": "InsightsMetrics | where TimeGenerated {HostTimeRange} | where Computer == \"WS-HV01\" | where Namespace == \"Memory\" | where Name == \"AvailableMB\" | extend TagsJson = parse_json(Tags) | extend TotalMemoryMB = todouble(TagsJson['vm.azm.ms/memorySizeMB']) | extend AvailableMB = todouble(Val) | summarize AvgAvailableGB = round(avg(AvailableMB) / 1024, 2), TotalMemoryGB = round(avg(TotalMemoryMB) / 1024, 2) by Computer | extend UsedGB = round(TotalMemoryGB - AvgAvailableGB, 2) | project Computer, AvgAvailableGB, UsedGB",
         "size": 0,
         "aggregation": 3,
         "title": "💾 Available Memory (GB)",
@@ -217,7 +273,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "InsightsMetrics | where TimeGenerated {HostTimeRange} | where Namespace == \"Processor\" | where Name == \"UtilizationPercentage\" | extend CPUUtil = todouble(Val) | summarize AvgCPU = round(avg(CPUUtil), 2) by Computer | order by AvgCPU desc",
+        "query": "InsightsMetrics | where TimeGenerated {HostTimeRange} | where Computer == \"WS-HV01\" | where Namespace == \"Processor\" | where Name == \"UtilizationPercentage\" | extend CPUUtil = todouble(Val) | summarize AvgCPU = round(avg(CPUUtil), 2) by Computer | order by AvgCPU desc",
         "size": 0,
         "aggregation": 3,
         "title": "💻 CPU Utilization (%)",

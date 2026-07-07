@@ -336,6 +336,71 @@
       "name": "query - 8"
     },
     {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "let read =\n    InsightsMetrics\n    | where TimeGenerated {HostTimeRange}\n    | where Computer == \"WS-HV01\"\n    | where Namespace == \"Network\"\n    | where Name == \"ReadBytesPerSecond\"\n    | summarize AvgReadBytesPerSecond = avg(todouble(Val)) by Computer;\nlet write =\n    InsightsMetrics\n    | where TimeGenerated {HostTimeRange}\n    | where Computer == \"WS-HV01\"\n    | where Namespace == \"Network\"\n    | where Name == \"WriteBytesPerSecond\"\n    | summarize AvgWriteBytesPerSecond = avg(todouble(Val)) by Computer;\nread\n| join kind=inner write on Computer\n| project\n    Computer,\n    AvgReadBytesPerSecond = round(AvgReadBytesPerSecond, 2),\n    AvgWriteBytesPerSecond = round(AvgWriteBytesPerSecond, 2)",
+        "size": 0,
+        "aggregation": 3,
+        "title": "💻 Hyper-V Network Utilization",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalyticsWorkspace}"
+        ],
+        "visualization": "unstackedbar",
+        "tileSettings": {
+          "showBorder": false,
+          "titleContent": {
+            "columnMatch": "Computer",
+            "formatter": 1
+          },
+          "leftContent": {
+            "columnMatch": "AvgReadBytesPerSecond",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            },
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "Computer",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "AvgReadBytesPerSecond",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "chartSettings": {
+          "xAxis": "Computer",
+          "yAxis": [
+            "AvgReadBytesPerSecond",
+            "AvgWriteBytesPerSecond"
+          ],
+          "showLegend": true
+        }
+      },
+      "customWidth": "33",
+      "name": "query - 8"
+    },
+    {
       "type": 1,
       "content": {
         "json": "\n\n---\n\n📋 **Virtual Machine Performance Insights**\n\n***Select Analysis Parameters***"
@@ -354,7 +419,7 @@
             "type": 4,
             "label": "📅 Analysis Period",
             "value": {
-              "durationMs": 3600000
+              "durationMs": 43200000
             },
             "typeSettings": {
               "selectableValues": [
@@ -624,7 +689,8 @@
               "additionalResourceOptions": []
             },
             "queryType": 1,
-            "resourceType": "microsoft.resourcegraph/resources"
+            "resourceType": "microsoft.resourcegraph/resources",
+            "value": "WS-22-N1"
           }
         ],
         "style": "pills",
@@ -637,7 +703,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "// Performance Hero KPIs - Current Status\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated > ago(1h)\n| where (Namespace == \"Processor\" and Name == \"UtilizationPercentage\") or\n        (Namespace == \"Memory\" and Name == \"AvailableMB\") or\n        (Namespace == \"LogicalDisk\" and Name == \"FreeSpacePercentage\")\n| summarize \n    LatestValue = avg(Val),\n    SampleCount = count()\n    by Namespace, Name\n| extend \n    MetricName = case(\n        Name == \"UtilizationPercentage\", \"CPU Usage\",\n        Name == \"AvailableMB\", \"Available Memory (MB)\",\n        Name == \"FreeSpacePercentage\", \"Disk Free Space\",\n        Name\n    ),\n    Status = case(\n        Name == \"UtilizationPercentage\" and LatestValue > 80, \"🔴 High\",\n        Name == \"UtilizationPercentage\" and LatestValue > 60, \"🟡 Moderate\", \n        Name == \"UtilizationPercentage\", \"🟢 Normal\",\n        Name == \"AvailableMB\" and LatestValue < 1024, \"🔴 Low\",\n        Name == \"AvailableMB\" and LatestValue < 2048, \"🟡 Moderate\",\n        Name == \"AvailableMB\", \"🟢 Good\",\n        Name == \"FreeSpacePercentage\" and LatestValue < 10, \"🔴 Critical\",\n        Name == \"FreeSpacePercentage\" and LatestValue < 20, \"🟡 Low\",\n        Name == \"FreeSpacePercentage\", \"🟢 Good\",\n        \"⚪ Unknown\"\n    ),\n    FormattedValue = case(\n        Name == \"UtilizationPercentage\", strcat(round(LatestValue, 1), \"%\"),\n        Name == \"AvailableMB\", strcat(round(LatestValue, 0), \" MB\"),\n        Name == \"FreeSpacePercentage\", strcat(round(LatestValue, 1), \"%\"),\n        tostring(round(LatestValue, 2))\n    )\n| project MetricName, Status, FormattedValue, SampleCount",
+        "query": "// Performance Hero KPIs - Current Status\nInsightsMetrics\n| where Computer == '{SelectedMachine}'\n| where TimeGenerated {TimeRange}\n| where (Namespace == \"Processor\" and Name == \"UtilizationPercentage\") or\n        (Namespace == \"Memory\" and Name == \"AvailableMB\") or\n        (Namespace == \"LogicalDisk\" and Name == \"FreeSpacePercentage\") or\n        (Namespace == \"Network\" and Name == \"ReadBytesPerSecond\") or \n        (Namespace == \"Network\" and Name == \"WriteBytesPerSecond\")\n| summarize \n    LatestValue = avg(Val),\n    SampleCount = count()\n    by Namespace, Name\n| extend \n    MetricName = case(\n        Name == \"UtilizationPercentage\", \"CPU Usage\",\n        Name == \"AvailableMB\", \"Available Memory (MB)\",\n        Name == \"FreeSpacePercentage\", \"Disk Free Space\",\n        Name == \"ReadBytesPerSecond\" , \"Network Read Bytes\",\n        Name == \"WriteBytesPerSecond\" , \"Network Write Bytes\",\n        Name\n    ),\n    Status = case(\n        Name == \"UtilizationPercentage\" and LatestValue > 80, \"🔴 High\",\n        Name == \"UtilizationPercentage\" and LatestValue > 60, \"🟡 Moderate\", \n        Name == \"UtilizationPercentage\", \"🟢 Normal\",\n        Name == \"AvailableMB\" and LatestValue < 1024, \"🔴 Low\",\n        Name == \"AvailableMB\" and LatestValue < 2048, \"🟡 Moderate\",\n        Name == \"AvailableMB\", \"🟢 Good\",\n        Name == \"FreeSpacePercentage\" and LatestValue < 10, \"🔴 Critical\",\n        Name == \"FreeSpacePercentage\" and LatestValue < 20, \"🟡 Low\",\n        Name == \"FreeSpacePercentage\", \"🟢 Good\",\n        \"⚪ Unknown\"\n    ),\n    FormattedValue = case(\n        Name == \"UtilizationPercentage\", strcat(round(LatestValue, 1), \"%\"),\n        Name == \"AvailableMB\", strcat(round(LatestValue, 0), \" MB\"),\n        Name == \"FreeSpacePercentage\", strcat(round(LatestValue, 1), \"%\"),\n        tostring(round(LatestValue, 2))\n    )\n| project MetricName, Status, FormattedValue, SampleCount",
         "size": 3,
         "title": "⚡{SelectedMachine} - Real-Time Performance Metrics {TimeRange}",
         "queryType": 0,

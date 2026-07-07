@@ -342,7 +342,7 @@
         "query": "let read =\n    InsightsMetrics\n    | where TimeGenerated {HostTimeRange}\n    | where Computer == \"WS-HV01\"\n    | where Namespace == \"Network\"\n    | where Name == \"ReadBytesPerSecond\"\n    | summarize AvgReadBytesPerSecond = avg(todouble(Val)) by Computer;\nlet write =\n    InsightsMetrics\n    | where TimeGenerated {HostTimeRange}\n    | where Computer == \"WS-HV01\"\n    | where Namespace == \"Network\"\n    | where Name == \"WriteBytesPerSecond\"\n    | summarize AvgWriteBytesPerSecond = avg(todouble(Val)) by Computer;\nread\n| join kind=inner write on Computer\n| project\n    Computer,\n    AvgReadBytesPerSecond = round(AvgReadBytesPerSecond, 2),\n    AvgWriteBytesPerSecond = round(AvgWriteBytesPerSecond, 2)",
         "size": 0,
         "aggregation": 3,
-        "title": "💻 Hyper-V Network Utilization",
+        "title": "🌐 🖧 Hyper-V Network Average Read/Write rate (bytes/sec)",
         "queryType": 0,
         "resourceType": "microsoft.operationalinsights/workspaces",
         "crossComponentResources": [
@@ -393,6 +393,71 @@
           "yAxis": [
             "AvgReadBytesPerSecond",
             "AvgWriteBytesPerSecond"
+          ],
+          "showLegend": true
+        }
+      },
+      "customWidth": "33",
+      "name": "query - 8"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "let read =\n    InsightsMetrics\n    | where TimeGenerated {HostTimeRange}\n    | where Computer == \"WS-HV01\"\n    | where Namespace == \"Network\"\n    | where Name == \"ReadBytesPerSecond\"\n    | extend TagsJson = parse_json(Tags)\n    | extend BytesPerSample = todouble(TagsJson[\"vm.azm.ms/bytes\"])\n    | summarize TotalReadBytes = sum(BytesPerSample) by Computer;\nlet write =\n    InsightsMetrics\n    | where TimeGenerated {HostTimeRange}\n    | where Computer == \"WS-HV01\"\n    | where Namespace == \"Network\"\n    | where Name == \"WriteBytesPerSecond\"\n    | extend TagsJson = parse_json(Tags)\n    | extend BytesPerSample = todouble(TagsJson[\"vm.azm.ms/bytes\"])\n    | summarize TotalWriteBytes = sum(BytesPerSample) by Computer;\nread\n| join kind=inner write on Computer\n| project\n    Computer,\n    TotalReadGB = round(TotalReadBytes / 1073741824, 3),\n    TotalWriteGB = round(TotalWriteBytes / 1073741824, 3)",
+        "size": 0,
+        "aggregation": 3,
+        "title": "🌐 🖧 Hyper-V Network Total Read/Write",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalyticsWorkspace}"
+        ],
+        "visualization": "unstackedbar",
+        "tileSettings": {
+          "showBorder": false,
+          "titleContent": {
+            "columnMatch": "Computer",
+            "formatter": 1
+          },
+          "leftContent": {
+            "columnMatch": "TotalReadGB",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "auto"
+            },
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "Computer",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "TotalReadGB",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "chartSettings": {
+          "xAxis": "Computer",
+          "yAxis": [
+            "TotalReadGB",
+            "TotalWriteGB"
           ],
           "showLegend": true
         }
